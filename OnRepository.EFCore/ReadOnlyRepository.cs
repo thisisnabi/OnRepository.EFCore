@@ -4,9 +4,9 @@ public class ReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
     where TEntity : EntityBase
 {
 
-    protected readonly DbContext _dbContext;
+    protected readonly ReposDbContext _dbContext;
 
-    public ReadOnlyRepository(DbContext dbContext)
+    public ReadOnlyRepository(ReposDbContext dbContext)
         => _dbContext = dbContext;
 
     public virtual async Task<bool> AnyAsync(CancellationToken cancellationToken = default)

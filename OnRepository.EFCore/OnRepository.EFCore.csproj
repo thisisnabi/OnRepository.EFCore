@@ -4,6 +4,18 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>1.0.0</Version>
+    <Authors>Nabi Karampoor</Authors>
+    <Company>Nilesoft</Company>
+    <Description>The Repository Pattern on .Net Core </Description>
+    <RepositoryUrl>https://github.com/thisisnabi/OnRepository.EFCore</RepositoryUrl>
+    <PackageProjectUrl>https://thisisnabi.ir/packages/OnRepository.EFCore</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>repository pattern;ef core</PackageTags>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>

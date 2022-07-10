@@ -2,7 +2,7 @@
 public class Repository<TEntity> : ReadOnlyRepository<TEntity>, IRepository<TEntity>
     where TEntity : EntityBase
 {
-    public Repository(DbContext dbContext) : base(dbContext) { }
+    public Repository(ReposDbContext dbContext) : base(dbContext) { }
 
     public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default) 
         =>  (await _dbContext
