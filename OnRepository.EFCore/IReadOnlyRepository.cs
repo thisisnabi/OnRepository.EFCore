@@ -10,4 +10,6 @@ public interface IReadOnlyRepository<T>
     Task<int> CountAsync(CancellationToken cancellationToken = default);
 
     Task<bool> AnyAsync(CancellationToken cancellationToken = default);
+        
+    Task<List<T>?> ListAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
 }
