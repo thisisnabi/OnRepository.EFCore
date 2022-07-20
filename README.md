@@ -57,7 +57,8 @@ public class Customer : EntityBase
 
 ```csharp
 // Repository Interfaces
-// You have 2 types of Repository, such as ReadOnlyRepository and Full-Access Repositoy which you can inherit from those.
+// You have 2 types of Repository, such as ReadOnlyRepository and 
+//Full-Access Repositoy which you can inherit from those.
 
 // IReadOnlyRepository - includes just reading methods 
 public interface ICustomerKindRepository : IReadOnlyRepository<CustomerKind>
