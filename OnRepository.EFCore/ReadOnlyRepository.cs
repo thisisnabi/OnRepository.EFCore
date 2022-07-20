@@ -29,7 +29,7 @@ public class ReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
             .Set<TEntity>()
             .ToListAsync(cancellationToken);
 
-    public virtual async Task<List<TEntity>> ListAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+    public virtual async Task<List<TEntity>?> ListAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         => await _dbContext
             .Set<TEntity>()
             .Where(predicate)
