@@ -92,11 +92,31 @@ public interface ICustomerRepository : IRepository<Customer>
         => await ListAsync(kind => kind.Id >= kindId);
  }
 
-// IRepository - You can use CRUD methods
-public interface ICustomerRepository : IRepository<Customer>
+// Repository 
+public class CustomerRepository : Repository<Customer>, ICustomerRepository
 {
-    // you can add custom methods
+    public CustomerRepository(AppDbContext dbContext) : base(dbContext)
+    {
+
+    }
 }
+```
+
+
+
+## DI/ Configuration Part
+
+Add your repositories and IUnitOfWork
+
+```csharp
+builder.Services.AddDbContext<AppDbContext>(options
+    => options.UseInMemoryDatabase("AppDbContext"));
+
+builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
+builder.Services.AddTransient<ICustomerKindRepository, CustomerKindRepository>();
+
+// use for UnitOfWork
+builder.Services.AddTransient<IUnitOfWork, AppDbContext>();
 ```
 
 
