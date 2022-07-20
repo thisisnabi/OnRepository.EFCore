@@ -13,7 +13,7 @@ This package helps you to easily implement Repository Pattern in your programs.
 ## Features
 - Use EntityBase for your entities
 - You can use Repository & ReadOnlyRepository
-- Same common method likes Read,Delete,List,Add,Update and etc.
+- Same common method likes Read, Delete, List, Add, Update and etc.
 - You can use IUnitOfWork patterns
 - Use Transactional actions
 
@@ -28,14 +28,51 @@ Install with Package Manager Console
 ```
 
 
-## Extend/ReposDbContext
-For use custom DbContext you can inherit from ReposDbContext
+## Extend/ Same base class you can use
+
+Using base classes makes it easier for you to implement the pattern
  
 ```csharp
+
+// DbContext
 // you must inherit, if you want use IUnitOfWork & Transactional options
 public class AppDbContext : ReposDbContext
 ```
 
+ 
+```csharp
+// Models
+// Context Entities must inherit from EntityBase
+
+public class CustomerKind : EntityBase
+{
+    // your fields
+}
+
+public class Customer : EntityBase
+{
+    // your fields
+}
+```
+
+```csharp
+// Repositories
+// You have 2 types of Repository, such as ReadOnlyRepository and Full-Access Repositoy which you can inherit from those.
+
+// IReadOnlyRepository - includes just reading methods 
+public interface ICustomerKindRepository : IReadOnlyRepository<CustomerKind>
+{
+    // you can add custom methods
+    // but be careful, just read!
+    Task<List<CustomerKind>> GetFromKind(int kindId);
+}
+
+// IRepository - You can use CRUD methods
+public interface ICustomerRepository : IRepository<Customer>
+{
+    // you can add custom methods
+}
+```
 
 
 
