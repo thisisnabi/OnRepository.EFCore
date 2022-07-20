@@ -56,7 +56,7 @@ public class Customer : EntityBase
 ```
 
 ```csharp
-// Repositories
+// Repository Interfaces
 // You have 2 types of Repository, such as ReadOnlyRepository and Full-Access Repositoy which you can inherit from those.
 
 // IReadOnlyRepository - includes just reading methods 
@@ -74,5 +74,29 @@ public interface ICustomerRepository : IRepository<Customer>
 }
 ```
 
+
+```csharp
+// Repository Classes
+
+// ReadOnlyRepository - includes just reading methods 
+ public class CustomerKindRepository : ReadOnlyRepository<CustomerKind>, ICustomerKindRepository
+ {
+    // you must pass your app db context to repository base
+    public CustomerKindRepository(AppDbContext dbContext) : base(dbContext)
+    {
+
+    }
+    
+    // your custom method
+    public async Task<List<CustomerKind>?> GetFromKind(int kindId) 
+        => await ListAsync(kind => kind.Id >= kindId);
+ }
+
+// IRepository - You can use CRUD methods
+public interface ICustomerRepository : IRepository<Customer>
+{
+    // you can add custom methods
+}
+```
 
 
