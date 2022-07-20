@@ -10,5 +10,6 @@ public interface IRepository<T> : IReadOnlyRepository<T> where T : class
 
     Task DeleteRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
 
+    IUnitOfWork UnitOfWork { get; }
 }
 

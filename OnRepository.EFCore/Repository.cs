@@ -2,6 +2,8 @@
 public class Repository<TEntity> : ReadOnlyRepository<TEntity>, IRepository<TEntity>
     where TEntity : EntityBase
 {
+    public IUnitOfWork UnitOfWork => _dbContext;
+
     public Repository(ReposDbContext dbContext) : base(dbContext) { }
 
     public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default) 
@@ -24,4 +26,6 @@ public class Repository<TEntity> : ReadOnlyRepository<TEntity>, IRepository<TEnt
         => await Task.Run(() =>
             _dbContext.Set<TEntity>().RemoveRange(entities),
                 cancellationToken);
+
+
 }

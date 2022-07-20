@@ -9,5 +9,9 @@ namespace OnRepository.EFCore.WebAPI.Sample.Repositories
         {
 
         }
+
+        public async Task<List<CustomerKind>?> GetFromKind(int kindId) 
+            => await ListAsync(kind => kind.Id >= kindId);
+        
     }
 }

@@ -21,7 +21,7 @@ public class ReposDbContext : DbContext, IUnitOfWork
     public IDbContextTransaction? GetCurrentTransaction()
         => _currentTransaction;
 
-    public bool HasActiveTransaction
+    public bool HasActiveTransaction()
         => _currentTransaction != null;
 
     private void TransactionDispose()

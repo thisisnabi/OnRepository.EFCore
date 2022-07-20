@@ -10,16 +10,13 @@ namespace OnRepository.EFCore.WebAPI.Sample.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        private readonly AppDbContext _dbContext;
         private readonly ICustomerRepository _customers;
         private readonly ICustomerKindRepository _kinds;
 
         public CustomerController(ICustomerRepository customerRepository, 
-            ICustomerKindRepository customerKindRepository,
-            AppDbContext appDbContext
+            ICustomerKindRepository customerKindRepository
             )
         {
-            _dbContext = appDbContext;
             _customers = customerRepository;
             _kinds = customerKindRepository;
         }
@@ -42,13 +39,15 @@ namespace OnRepository.EFCore.WebAPI.Sample.Controllers
                 KindId = kindId
             });
 
+            await _customers.UnitOfWork.SaveChangesAsync();
+
             return Ok(newCustomer);
         }
 
         public async Task<ActionResult<Customer>> CreateCustomers(string name, string address, int kindId)
         {
-
-            using(var transactionScope = await _dbContext.BeginTransactionAsync())
+            // create your Transaction Scope, you can pass Isolation Level
+            using(var transactionScope = await _customers.UnitOfWork.BeginTransactionAsync())
             {
                 if (transactionScope is null)
                     return BadRequest("Can't take a Trasaction Scope.");
@@ -65,6 +64,7 @@ namespace OnRepository.EFCore.WebAPI.Sample.Controllers
                  
                 try
                 {
+                    await _customers.UnitOfWork.SaveChangesAsync();
                     await transactionScope.CommitAsync();
                     return Ok("Trasaction was done");
                 }
