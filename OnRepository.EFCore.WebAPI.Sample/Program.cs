@@ -18,10 +18,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options
     => options.UseInMemoryDatabase("AppDbContext"));
 
-builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
-builder.Services.AddTransient<ICustomerKindRepository, CustomerKindRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ICustomerKindRepository, CustomerKindRepository>();
 
-builder.Services.AddTransient<IUnitOfWork, AppDbContext>();
+builder.Services.AddScoped<IUnitOfWork, AppDbContext>();
 
 
 
