@@ -13,7 +13,7 @@ namespace OnRepository.EFCore.WebAPI.Sample.Controllers
         private readonly ICustomerRepository _customers;
         private readonly ICustomerKindRepository _kinds;
 
-        public CustomerController(ICustomerRepository customerRepository, 
+        public CustomerController(ICustomerRepository customerRepository,
             ICustomerKindRepository customerKindRepository
             )
         {
@@ -30,7 +30,7 @@ namespace OnRepository.EFCore.WebAPI.Sample.Controllers
             return Ok(result);
         }
 
-        public async Task<ActionResult<Customer>> CreateCustomer(string name,string address,int kindId) 
+        public async Task<ActionResult<Customer>> CreateCustomer(string name, string address, int kindId)
         {
             var newCustomer = await _customers.AddAsync(new Customer
             {
@@ -47,40 +47,41 @@ namespace OnRepository.EFCore.WebAPI.Sample.Controllers
         public async Task<ActionResult<Customer>> CreateCustomers(string name, string address, int kindId)
         {
             // create your Transaction Scope, you can pass Isolation Level
-            using(var transactionScope = await _customers.UnitOfWork.BeginTransactionAsync())
-            {
-                if (transactionScope is null)
-                    return BadRequest("Can't take a Trasaction Scope.");
+            using var transactionScope = await _customers.UnitOfWork.BeginTransactionAsync();
 
-                for (int i = 0; i < 10; i++)
+
+            if (transactionScope is null)
+                return BadRequest("Can't take a Trasaction Scope.");
+
+            for (int i = 0; i < 10; i++)
+            {
+                await _customers.AddAsync(new Customer
                 {
-                    await _customers.AddAsync(new Customer
-                    {
-                        Name = name,
-                        Address = address,
-                        KindId = kindId
-                    });
-                }
-                 
-                try
-                {
-                    await _customers.UnitOfWork.SaveChangesAsync();
-                    await transactionScope.CommitAsync();
-                    return Ok("Trasaction was done");
-                }
-                catch (Exception)
-                {
-                    await transactionScope.RollbackAsync();
-                    return BadRequest("Transaction was rollbacked.");
-                }
+                    Name = name,
+                    Address = address,
+                    KindId = kindId
+                });
             }
-       
+
+            try
+            {
+                await _customers.UnitOfWork.SaveChangesAsync();
+                await _customers.UnitOfWork.CommitTransactionAsync(transactionScope);
+                return Ok("Trasaction was done");
+            }
+            catch (Exception)
+            {
+                await _customers.UnitOfWork.RollbackTransactionAsync();
+                return BadRequest("Transaction was rollbacked.");
+            }
+
+
         }
 
 
         // readOnlyRepository
-        public async Task<IActionResult> GetCustomerKinds() 
+        public async Task<IActionResult> GetCustomerKinds()
             => Ok(await _kinds.ListAsync());
- 
+
     }
 }
