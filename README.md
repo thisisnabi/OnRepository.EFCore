@@ -113,11 +113,12 @@ Add your repositories and IUnitOfWork
 builder.Services.AddDbContext<AppDbContext>(options
     => options.UseInMemoryDatabase("AppDbContext"));
 
-builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
-builder.Services.AddTransient<ICustomerKindRepository, CustomerKindRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ICustomerKindRepository, CustomerKindRepository>();
+
 
 // use for UnitOfWork
-builder.Services.AddTransient<IUnitOfWork, AppDbContext>();
+builder.Services.AddScoped<IUnitOfWork, AppDbContext>();
 ```
 
  
@@ -162,9 +163,10 @@ public class CustomerController : ControllerBase
 
     public async Task<ActionResult<Customer>> CreateCustomers(string name, string address, int kindId)
     {
-        // create your Transaction Scope, you can pass Isolation Level
-        using(var transactionScope = await _customers.UnitOfWork.BeginTransactionAsync())
-        {
+            // create your Transaction Scope, you can pass Isolation Level
+            using var transactionScope = await _customers.UnitOfWork.BeginTransactionAsync();
+
+
             if (transactionScope is null)
                 return BadRequest("Can't take a Trasaction Scope.");
 
@@ -177,19 +179,18 @@ public class CustomerController : ControllerBase
                     KindId = kindId
                 });
             }
-                 
+
             try
             {
                 await _customers.UnitOfWork.SaveChangesAsync();
-                await transactionScope.CommitAsync();
+                await _customers.UnitOfWork.CommitTransactionAsync(transactionScope);
                 return Ok("Trasaction was done");
             }
             catch (Exception)
             {
-                await transactionScope.RollbackAsync();
+                await _customers.UnitOfWork.RollbackTransactionAsync();
                 return BadRequest("Transaction was rollbacked.");
             }
-        }
        
     }
 
